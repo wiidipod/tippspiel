@@ -1,0 +1,5 @@
+.venv/
+.idea/
+.serena/
+__pycache__/
+*.py[cod]

@@ -164,8 +164,8 @@ def format_team_name(name: str) -> str:
             formatted.append(part)
             keep_longest = False
         else:
-            formatted.append(f"{part[0]}.")
-    return " ".join(reversed(formatted))
+            formatted.append(part[0])
+    return " ".join(part[:8] for part in reversed(formatted))[:12]
 
 
 def upcoming_predictions(search_value: str, competition_id: int | None = None) -> str:
@@ -183,8 +183,10 @@ def upcoming_predictions(search_value: str, competition_id: int | None = None) -
         kickoff = datetime.fromtimestamp(event["eventStartTime"] / 1000, BERLIN_TIMEZONE)
         day = f"{WEEKDAYS[kickoff.weekday()]}, {kickoff:%d.%m.}"
         time = f"{kickoff:%H:%M} Uhr"
+        home_team = format_team_name(event["team1"])
+        away_team = format_team_name(event["team2"])
         days.setdefault(day, {}).setdefault(time, []).append(
-            f"{escape(format_team_name(event['team1']))} {home_goals}\ufe0f\u20e3:{away_goals}\ufe0f\u20e3 {escape(format_team_name(event['team2']))}"
+            f"<code>{escape(home_team.rjust(12))}</code> {home_goals}\ufe0f\u20e3:{away_goals}\ufe0f\u20e3 <code>{escape(away_team.ljust(12))}</code>"
         )
     return "\n\n".join(
         "\n".join([f"<code>    {day}</code>", *(f"<code>        {time}</code>\n" + "\n".join(games) for time, games in times.items())])

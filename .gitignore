@@ -3,4 +3,4 @@
 .serena/
 __pycache__/
 *.py[cod]
-./token
+token
